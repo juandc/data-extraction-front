@@ -46,6 +46,8 @@ export const WebcamCapture = ({ addSs }: Props) => {
             zIndex: -1,
             height: 1280 / 2,
             width: 720 / 2,
+            maxHeight: "calc(90dvh - 4rem)",
+            maxWidth: "calc(80dvw - 4rem)",
           }}
         />
         <button

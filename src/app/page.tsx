@@ -8,8 +8,20 @@ import styles from "./page.module.css";
 
 const fileTypes = ["JPEG", "PNG", "GIF", "PDF", "DOC", "DOCX"];
 
+function DataURIToBlob(dataURI: string) {
+  const splitDataURI = dataURI.split(',')
+  const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
+  const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
+
+  const ia = new Uint8Array(byteString.length)
+  for (let i = 0; i < byteString.length; i++)
+      ia[i] = byteString.charCodeAt(i)
+
+  return new Blob([ia], { type: mimeString })
+}
+
 export default function Home() {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<Array<File | Blob>>([]);
   const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
 
   const handleFile = (fileList: FileList) => {
@@ -18,9 +30,28 @@ export default function Home() {
   };
 
   const addSs = (file: Base64URLString) => {
-    const newFile = new File([file], `webcam-${Date.now()}.jpg`, { type: "image/jpeg" });
+    // const newFile = new File([file], `webcam-${Date.now()}.png`, { type: "image/png" });
+    const newFile = DataURIToBlob(file);
     setFiles(prev => [...prev, newFile]);
     setTakingPhoto(false);
+  };
+
+  const uploadFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append("data", file);
+    // files.forEach(file => formData.append("files", file));
+    const response = await fetch("https://n8n.deltaweb.cl/webhook/ocrtest", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
+  const uploadFiles = () => {
+    files.forEach(async file => {
+      await uploadFile(file);
+    });
   };
 
   let label: string | undefined;
@@ -59,20 +90,19 @@ export default function Home() {
             {files && (
               <div>
                 {[...files].flatMap((file, index) => (
-                  <p key={`${index}`}>{file.name}</p>
+                  <p key={`${index}`}>{file?.name ?? "Archivo extraño"}</p>
                 ))}
               </div>
             )}
 
             <div className={styles.ctas}>
-              <a
-                href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
                 className={styles.primary}
+                onClick={uploadFiles}
               >
                 Enviar
-              </a>
+              </button>
             </div>
           </main>
         </div>

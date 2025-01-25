@@ -1,11 +1,4 @@
 .page {
-  --gray-rgb: 0, 0, 0;
-  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-
   display: grid;
   grid-template-rows: 20px 1fr 20px;
   align-items: center;
@@ -23,13 +16,50 @@
   grid-row-start: 2;
 }
 
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.dropzone_drag,
+.dropzone_photo {
+  border: 2px solid var(--text);
+  border-radius: 12px;
+  background-color: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.dropzone_drag:hover,
+.dropzone_photo:hover {
+  background-color: var(--text);
+  color: var(--bg);
+}
+
+@media (min-width: 768px) {
+  .dropzone {
+    flex-direction: row;
+  }
+  .dropzone_drag,
+  .dropzone_photo {
+    width: 50%;
+  }
+}
+
 .ctas {
   display: flex;
   justify-content: center;
   gap: 16px;
 }
 
-.ctas a {
+a.primary, button.primary {
   appearance: none;
   border-radius: 128px;
   height: 48px;
@@ -49,13 +79,16 @@
   font-weight: 500;
 }
 
-a.primary {
-  background-color: transparent;
-  color: var(--primary);
+a.primary, button.primary {
+  border: none;
+  background-color: var(--text);
+  color: var(--bg);
+  cursor: pointer;
   gap: 8px;
 }
-a.primary:hover {
-  background: var(--primary-dark);
+a.primary:hover, button.primary:hover {
+  background: var(--primary);
+  color: var(--bg);
 }
 
 .footer {

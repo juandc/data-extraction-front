@@ -1,7 +1,8 @@
 :root {
-  --primary: #aadb7a;
-  --primary-dark: #192c08;
+  --primary: #96db7a;
+  --primary-dark: #0f901c;
   --bg: #0c0215;
+  --bg-dark: hsl(272, 63%, 13%);
   --text: #d5d4d7;
 }
 
